@@ -5,8 +5,15 @@ let canvas = document.getElementById("canvas_id");
 let context = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
+let frameRate = 0.0005;
+var startTime, then, now, elapsed;
 
 let flower = {x: 234, y: HEIGHT, dx: 5, color: "rgb(16, 141, 43)"};
+
+function startAnimating() {
+  then = Date.now();
+  startTime = then;
+}
 
 // Functions for drawing left flower stem
 function updateStem() {
@@ -17,16 +24,25 @@ function updateStem() {
 function startStem() { 
   if(flower.x < 310){ requestAnimationFrame(startStem); }
 
-  context.strokeStyle = flower.color;
-  context.lineWidth = 5;
-  context.beginPath();
-  console.log("1: " + flower.y);
-  context.moveTo(flower.x, flower.y);
-  updateStem();
-  console.log("2: " + flower.y);
-  context.lineTo(flower.x, flower.y);
-  context.stroke();
+  now = Date.now();
+  elapsed = now - then;
+
+  if (elapsed > frameRate) {
+    then = now - (elapsed % frameRate);
+      
+
+    context.strokeStyle = flower.color;
+    context.lineWidth = 5;
+    context.beginPath();
+    console.log("1: " + flower.y);
+    context.moveTo(flower.x, flower.y);
+    updateStem();
+    console.log("2: " + flower.y);
+    context.lineTo(flower.x, flower.y);
+    context.stroke();
+  }
 }
 
 // Code
+startAnimating();
 startStem();
