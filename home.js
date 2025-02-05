@@ -8,7 +8,9 @@ const HEIGHT = canvas.height;
 let frameRate = 30;
 var startTime, then, now, elapsed;
 
-let flower = {x: 234, y: HEIGHT, dx: 0.5, color: "rgb(16, 141, 43)"};
+var stemDone = 0;
+let leftStem = {x: 87, y: HEIGHT, dx: 0.5, color: "rgb(16, 141, 43)"};
+let rightStem = {x: 1571, y: HEIGHT, dx: 1, color: "rgb(16, 141, 43)"};
 
 function startAnimating() {
   then = Date.now();
@@ -17,17 +19,17 @@ function startAnimating() {
 
 // Functions for drawing left flower stem
 function updateLeftStem() {
-  flower.x += flower.dx;
-  flower.y = (0.1 * ((flower.x - 300)**2)) - flower.x + 700;
+  leftStem.x += leftStem.dx;
+  leftStem.y = (0.08 * ((leftStem.x - 120)**2)) - leftStem.x + 700;
 }
 
 function startLeftStem() { 
-  if(flower.x < 310){ 
+  if(leftStem.x <= 135){ 
     requestAnimationFrame(startLeftStem); 
   }
   else {
-    setup();
-    loop();
+    stemDone++;
+    leftLoop();
   }
 
   now = Date.now();
@@ -36,28 +38,46 @@ function startLeftStem() {
   if (elapsed > frameRate) {
     then = now - (elapsed % frameRate);
       
-
-    context.strokeStyle = flower.color;
+    context.strokeStyle = leftStem.color;
     context.lineWidth = 5;
     context.beginPath();
-    context.moveTo(flower.x, flower.y);
+    context.moveTo(leftStem.x, leftStem.y);
     updateLeftStem();
-    context.lineTo(flower.x, flower.y);
+    context.lineTo(leftStem.x, leftStem.y);
     context.stroke();
   }
 }
 
 function updateRightStem() {
-  // code
+  rightStem.x -= rightStem.dx;
+  rightStem.y = (0.1 * ((rightStem.x - 1480)**2)) - rightStem.x + 1600;
 }
 
 function startRightStem() {
-  // code
+  if(rightStem.x >= 1478){ 
+    requestAnimationFrame(startRightStem); 
+  }
+  else {
+    stemDone++;
+    Setup();
+    rightLoop();
+  }
+
+  if (elapsed > frameRate) {
+    context.strokeStyle = rightStem.color;
+    context.lineWidth = 5;
+    context.beginPath();
+    context.moveTo(rightStem.x, rightStem.y);
+    updateRightStem();
+    context.lineTo(rightStem.x, rightStem.y);
+    context.stroke();
+  }
 }
 
 // Code
 setTimeout(function() { startAnimating(); }, 1000);
 startLeftStem();
+startRightStem();
 
 
 
@@ -77,33 +97,47 @@ function rose(theta, n, d, amplitude) {
 }
 
 function point(x, y, context) {
-    context.beginPath();
-    context.arc(x, y, 1, 0, 2 * Math.PI, true);
-    context.stroke();
+  if (stemDone < 2) {
+    Setup();
+  }
+  context.beginPath();
+  context.arc(x, y, 1, 0, 2 * Math.PI, true);
+  context.stroke();
 }
 
 var nodes;
 var t = 0;
 
-function setup() {
+function Setup() {
   // bloom.
-  context.shadowBlur = 10;
+  context.shadowBlur = 7;
   context.shadowColor = 'rgb(0, 0, 0)';
   
   // point style
   context.strokeStyle = 'rgb(192, 23, 207)';
 }
 
-function loop() {
-  window.requestAnimationFrame(loop);
+function leftLoop() {
+  window.requestAnimationFrame(leftLoop);
 
   context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
 
-  var p = rose(t, 3, 2, 100.0);
-  point(p.x, p.y - 50, context);
+  var leftP = rose(t, 3, 2, 100.0);
+  point(leftP.x - 670, leftP.y + 120, context);
 
-
+  context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
   
+  t += 0.05;
+}
+
+function rightLoop() {
+  window.requestAnimationFrame(rightLoop);
+
+  context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
+
+  var rightP = rose(t, 7, 2, 100.0);
+  point(rightP.x + 670, rightP.y - 333, context);
+
   context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
   
   t += 0.05;
