@@ -5,10 +5,10 @@ let canvas = document.getElementById("canvas_id");
 let context = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
-let frameRate = 0.0005;
+let frameRate = 30;
 var startTime, then, now, elapsed;
 
-let flower = {x: 234, y: HEIGHT, dx: 5, color: "rgb(16, 141, 43)"};
+let flower = {x: 234, y: HEIGHT, dx: 0.5, color: "rgb(16, 141, 43)"};
 
 function startAnimating() {
   then = Date.now();
@@ -44,5 +44,5 @@ function startStem() {
 }
 
 // Code
-startAnimating();
+setTimeout(function() { startAnimating(); }, 1000);
 startStem();
