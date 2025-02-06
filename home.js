@@ -29,6 +29,7 @@ function startLeftStem() {
   }
   else {
     stemDone++;
+    roseSetup();
     leftLoop();
   }
 
@@ -59,7 +60,7 @@ function startRightStem() {
   }
   else {
     stemDone++;
-    Setup();
+    roseSetup();
     rightLoop();
   }
 
@@ -89,6 +90,9 @@ startRightStem();
 // What is k, n, d variable?
 // you can understand to see follow svg image.
 // https://en.wikipedia.org/wiki/Rose_(mathematics)#/media/File:Rose-rhodonea-curve-7x9-chart-improved.svg
+
+let frameRateRose = 20;
+
 function rose(theta, n, d, amplitude) {
   var k = n / d;
   var x = amplitude * Math.cos(k * theta) * Math.cos(theta);
@@ -98,7 +102,7 @@ function rose(theta, n, d, amplitude) {
 
 function point(x, y, context) {
   if (stemDone < 2) {
-    Setup();
+    roseSetup();
   }
   context.beginPath();
   context.arc(x, y, 1, 0, 2 * Math.PI, true);
@@ -108,9 +112,9 @@ function point(x, y, context) {
 var nodes;
 var t = 0;
 
-function Setup() {
+function roseSetup() {
   // bloom.
-  context.shadowBlur = 7;
+  context.shadowBlur = 10;
   context.shadowColor = 'rgb(0, 0, 0)';
   
   // point style
@@ -120,25 +124,75 @@ function Setup() {
 function leftLoop() {
   window.requestAnimationFrame(leftLoop);
 
-  context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
+  now = Date.now();
+  elapsed = now - then;
 
-  var leftP = rose(t, 3, 2, 100.0);
-  point(leftP.x - 670, leftP.y + 120, context);
+  if (elapsed > frameRateRose) {
+    then = now - (elapsed % frameRateRose);
 
-  context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
-  
-  t += 0.05;
+    context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
+
+    var leftP = rose(t, 3, 2, 100.0);
+    point(leftP.x - 670, leftP.y + 120, context);
+
+    context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
+    
+    t += 0.05;
+  }
 }
 
 function rightLoop() {
   window.requestAnimationFrame(rightLoop);
 
-  context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
+  if (((Date.now() - startTime) > 4000) && (Date.now() - startTime) < 4020) {
+    console.log("Hiya");
+    textSetup("Happy Valentines Eleanor!");
+    fadeOut();
+  }
 
-  var rightP = rose(t, 7, 2, 100.0);
-  point(rightP.x + 670, rightP.y - 333, context);
+  if (elapsed > frameRateRose) {
+    context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
 
-  context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
-  
-  t += 0.05;
+    var rightP = rose(t, 7, 2, 100.0);
+    point(rightP.x + 670, rightP.y - 333, context);
+
+    context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
+    
+    t += 0.05;
+  }
+}
+
+
+
+// Text
+
+let message, alpha, frameRateText;
+var textThen, textNow, textElapsed;
+
+
+function textSetup(text) {
+  message = text;
+  alpha = 0.0;
+  frameRateText = 10;
+  textThen = Date.now();
+}
+
+function fadeOut() {
+  if (alpha < 1.0) {
+    requestAnimationFrame(fadeOut);
+  }
+
+  textNow = Date.now();
+  textElapsed = textNow - textThen;
+  console.log(textElapsed);
+
+  if (textElapsed > frameRateText) {
+    textThen = textNow - (textElapsed % frameRateText);
+
+    context.clearRect(300, 100, 1000, 700);
+    context.fillStyle = "rgba(166, 64, 188, " + alpha + ")";
+    context.font = "italic 60pt Arial";
+    context.fillText(message, 340, 450);
+    alpha += 0.003;
+  }
 }
