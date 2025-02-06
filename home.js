@@ -145,7 +145,6 @@ function rightLoop() {
   window.requestAnimationFrame(rightLoop);
 
   if (((Date.now() - startTime) > 4000) && (Date.now() - startTime) < 4020) {
-    console.log("Hiya");
     textSetup("Happy Valentines Eleanor!");
     fadeOut();
   }
@@ -181,10 +180,13 @@ function fadeOut() {
   if (alpha < 1.0) {
     requestAnimationFrame(fadeOut);
   }
+  else {
+    crossSetup();
+    crossLoop();
+  }
 
   textNow = Date.now();
   textElapsed = textNow - textThen;
-  console.log(textElapsed);
 
   if (textElapsed > frameRateText) {
     textThen = textNow - (textElapsed % frameRateText);
@@ -196,3 +198,5 @@ function fadeOut() {
     alpha += 0.003;
   }
 }
+
+// Heart
