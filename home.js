@@ -9,8 +9,8 @@ let frameRate = 30;
 var startTime, then, now, elapsed;
 
 var stemDone = 0;
-let leftStem = {x: 87, y: HEIGHT, dx: 0.5, color: "rgb(16, 141, 43)"};
-let rightStem = {x: 1571, y: HEIGHT, dx: 1, color: "rgb(16, 141, 43)"};
+let leftStem = {x: 73, y: HEIGHT, dx: 0.5, color: "rgb(16, 141, 43)"};
+let rightStem = {x: 1276, y: HEIGHT, dx: 1, color: "rgb(16, 141, 43)"};
 
 function startAnimating() {
   then = Date.now();
@@ -20,11 +20,11 @@ function startAnimating() {
 // Functions for drawing left flower stem
 function updateLeftStem() {
   leftStem.x += leftStem.dx;
-  leftStem.y = (0.08 * ((leftStem.x - 120)**2)) - leftStem.x + 700;
+  leftStem.y = (0.08 * ((leftStem.x - 120)**2)) - leftStem.x + 600;
 }
 
 function startLeftStem() { 
-  if(leftStem.x <= 135){ 
+  if(leftStem.x <= 138){ 
     requestAnimationFrame(startLeftStem); 
   }
   else {
@@ -51,11 +51,11 @@ function startLeftStem() {
 
 function updateRightStem() {
   rightStem.x -= rightStem.dx;
-  rightStem.y = (0.1 * ((rightStem.x - 1480)**2)) - rightStem.x + 1600;
+  rightStem.y = (0.1 * ((rightStem.x - 1200)**2)) - rightStem.x + 1400;
 }
 
 function startRightStem() {
-  if(rightStem.x >= 1478){ 
+  if(rightStem.x >= 1193){ 
     requestAnimationFrame(startRightStem); 
   }
   else {
@@ -133,7 +133,7 @@ function leftLoop() {
     context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
 
     var leftP = rose(t, 3, 2, 100.0);
-    point(leftP.x - 670, leftP.y + 120, context);
+    point(leftP.x - 560, leftP.y + 132, context);
 
     context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
     
@@ -144,8 +144,8 @@ function leftLoop() {
 function rightLoop() {
   window.requestAnimationFrame(rightLoop);
 
-  if (((Date.now() - startTime) > 4000) && (Date.now() - startTime) < 4020) {
-    console.log("Hiya");
+
+  if (((Date.now() - startTime) > 4100) && (Date.now() - startTime) < 4120) {
     textSetup("Happy Valentines Eleanor!");
     fadeOut();
   }
@@ -154,7 +154,7 @@ function rightLoop() {
     context.translate(WIDTH/2, HEIGHT/2); // (0, 0) set to screen center position.
 
     var rightP = rose(t, 7, 2, 100.0);
-    point(rightP.x + 670, rightP.y - 333, context);
+    point(rightP.x + 490, rightP.y - 140, context);
 
     context.translate(-WIDTH/2, -HEIGHT/2); // reset screen
     
@@ -178,7 +178,7 @@ function textSetup(text) {
 }
 
 function fadeOut() {
-  if (alpha < 1.0) {
+  if (alpha <= 1.0) {
     requestAnimationFrame(fadeOut);
   }
 
@@ -189,10 +189,10 @@ function fadeOut() {
   if (textElapsed > frameRateText) {
     textThen = textNow - (textElapsed % frameRateText);
 
-    context.clearRect(300, 100, 1000, 700);
+    context.clearRect(300, 316, 900, 350);
     context.fillStyle = "rgba(166, 64, 188, " + alpha + ")";
-    context.font = "italic 60pt Arial";
-    context.fillText(message, 340, 450);
+    context.font = "italic 50pt Arial";
+    context.fillText(message, 340, 375);
     alpha += 0.003;
   }
 }
